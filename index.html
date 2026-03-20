@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global UPI Merchant Program - Change Your Destiny</title>
+    <style>
+        :root { --primary: #0d47a1; --secondary: #1a73e8; --accent: #ffab00; --success: #00c853; --text: #2c3e50; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: #f4f7f6; color: var(--text); line-height: 1.8; overflow-x: hidden; }
+        
+        /* 语言切换按钮 - 悬浮在右上角 */
+        .lang-switch { position: fixed; top: 15px; right: 15px; z-index: 1000; background: white; border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); padding: 5px; display: flex; }
+        .lang-btn { padding: 8px 18px; border-radius: 25px; cursor: pointer; font-size: 14px; font-weight: bold; border: none; background: none; transition: 0.3s; }
+        .lang-btn.active { background: var(--primary); color: white; }
+
+        /* 顶部看板：实时活跃人数 */
+        .live-stats { background: #001233; color: #00ff88; padding: 12px; text-align: center; font-size: 0.95rem; font-weight: bold; }
+        .dot { height: 10px; width: 10px; background-color: #00ff88; border-radius: 50%; display: inline-block; margin-right: 8px; animation: blink 1s infinite; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+        /* 大气 Hero 区域 */
+        .hero { background: linear-gradient(135deg, #0d47a1 0%, #002171 100%); color: white; padding: 80px 20px 60px; text-align: center; border-bottom-left-radius: 50px; border-bottom-right-radius: 50px; }
+        .hero h1 { font-size: 2.8rem; margin: 10px 0; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
+        .highlight-box { background: var(--accent); color: #000; padding: 15px 30px; border-radius: 12px; display: inline-block; font-weight: bold; font-size: 1.8rem; margin: 20px 0; box-shadow: 0 6px 20px rgba(255,171,0,0.5); animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        
+        /* 实时滚动结算看板 */
+        .rolling-board { background: #fff; margin: -30px 20px 20px; border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); height: 150px; overflow: hidden; position: relative; border-left: 5px solid var(--success); }
+        .roll-title { font-size: 1rem; color: var(--primary); font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .roll-item { padding: 10px 0; border-bottom: 1px solid #eee; font-size: 0.95rem; animation: scrollUp 15s linear infinite; }
+        @keyframes scrollUp { 0% { transform: translateY(0); } 100% { transform: translateY(-400px); } }
+
+        /* 详实项目介绍 */
+        .section { padding: 40px 20px; max-width: 1000px; margin: 0 auto; }
+        .section-title { text-align: center; color: var(--primary); margin-bottom: 35px; font-size: 2rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-top: 5px solid var(--secondary); transition: transform 0.3s; }
+        .card:hover { transform: translateY(-5px); }
+        .card h3 { color: var(--success); font-size: 1.4rem; margin-top: 0; }
+        .card p { color: #666; font-size: 1rem; }
+
+        /* 深度成功案例 */
+        .case-study { background: #fff; border-radius: 25px; padding: 35px; margin: 30px 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 2px dashed var(--accent); position: relative; }
+        .case-header { display: flex; align-items: center; gap: 20px; margin-bottom: 20px; }
+        .case-img { width: 90px; height: 90px; border-radius: 50%; flex-shrink: 0; border: 4px solid var(--accent); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .case-name { font-size: 1.3rem; color: var(--primary); }
+        .case-desc { font-style: italic; color: #444; font-size: 1.05rem; }
+        .quote-icon { position: absolute; top: 20px; right: 30px; font-size: 3rem; color: rgba(255,171,0,0.3); }
+
+        /* 悬浮动态通知弹窗 */
+        .toast-notif { position: fixed; bottom: 120px; left: 20px; background: rgba(0,0,0,0.85); color: white; padding: 12px 25px; border-radius: 35px; font-size: 0.9rem; display: none; z-index: 999; box-shadow: 0 5px 20px rgba(0,0,0,0.3); }
+
+        /* 底部行动按钮 */
+        .cta-box { text-align: center; padding: 50px 20px; background: white; border-top-left-radius: 50px; border-top-right-radius: 50px; }
+        .whatsapp-btn { background: #25d366; color: white; padding: 20px 50px; border-radius: 60px; text-decoration: none; font-weight: bold; font-size: 1.4rem; display: inline-block; box-shadow: 0 12px 30px rgba(37,211,102,0.5); animation: shake 4s infinite; }
+        @keyframes shake { 0%, 100% { transform: rotate(0); } 10%, 30%, 50%, 70%, 90% { transform: rotate(-1.5deg); } 20%, 40%, 60%, 80% { transform: rotate(1.5deg); } }
+        
+        @media (max-width: 600px) { .hero h1 { font-size: 2rem; } .highlight-box { font-size: 1.4rem; } }
+    </style>
+</head>
+<body>
+
+<div class="lang-switch">
+    <button class="lang-btn active" onclick="switchLang('en')">English/Hindi</button>
+    <button class="lang-btn" onclick="switchLang('cn')">中文预览</button>
+</div>
+
+<div class="live-stats">
+    <span class="dot"></span> <span id="active-users">2,481</span> <span id="l-active">Verified Partners Online & Processing</span>
+</div>
+
+<div class="hero">
+    <div id="h-sub">JOIN INDIA'S LARGEST MERCHANT SETTLEMENT NETWORK</div>
+    <h1 id="h-title">Start UPI Settlement Today</h1>
+    <div class="highlight-box" id="h-income">EARN ₹5,000+ DAILY!</div>
+    <p id="h-desc" style="max-width: 650px; margin: 0 auto;">No Deposit. No Joining Fees. Get high-volume e-commerce settlement orders and earn 2%-3% instant commission on every cycle. Safe, Legal, and Fast.</p>
+</div>
+
+<div class="rolling-board">
+    <div class="roll-title">⚡️ Live Settlement Feed</div>
+    <div id="roll-container">
+        </div>
+</div>
+
+<div class="section">
+    <h2 class="section-title" id="s1-title">Why Become Our Merchant Partner?</h2>
+    <div class="grid">
+        <div class="card">
+            <h3 id="c1-t">💰 High Commission (2%-3%)</h3>
+            <p id="c1-d">We offer the highest commission rates in the industry. For every ₹10,000 you settle, you earn ₹200-₹300 instantly. The more cycles you complete, the more you earn. There is no limit to your daily earnings.</p>
+        </div>
+        <div class="card">
+            <h3 id="c2-t">🛡️ No Deposit Mode</h3>
+            <p id="c2-d">We value trust. You NEVER need to pay any "security deposits" or "joining fees" to us. Your funds stay in your own bank account, under your full control. This is the safest way to earn.</p>
+        </div>
+        <div class="card">
+            <h3 id="c3-t">🔓 Bypassing UPI Limits</h3>
+            <p id="c3-d">Normal UPI accounts have daily transaction limits. Our proprietary Merchant QR technology allows you to handle high-volume e-commerce orders, unlocking unlimited earning potential every day.</p>
+        </div>
+        <div class="card">
+            <h3 id="c4-t">⏱️ Instant Settlement</h3>
+            <p id="c4-d">We use advanced real-time settlement technology. After completing a cycle, your original funds plus your commission are credited back to your account within minutes. Fast, secure, and hassle-free.</p>
+        </div>
+    </div>
+</div>
+
+<div class="section" style="background: #edf2f7; border-radius: 30px;">
+    <h2 class="section-title" id="s2-title">Change Your Destiny: Real Stories</h2>
+    <div class="case-study">
+        <span class="quote-icon">“</span>
+        <div class="case-header">
+            <div class="case-img" style="background: url('https://img.icons8.com/color/150/person-male.png') no-repeat center/cover;"></div>
+            <div class="case-name">
+                <strong id="case-n">Rahul from Mumbai (Full-time Partner)</strong>
+                <p style="color:#888; font-size: 0.85rem; margin: 5px 0;">Joined: Jan 2026 | Prev Income: ₹8,000/mo</p>
+            </div>
+        </div>
+        <div class="case-text">
+            <p id="case-d">"Before joining this program, I was struggling with a low salary of ₹8,000 per month, barely feeding my family. The 'No Deposit' model convinced me to try. The 1st cycle was smooth. I received ₹10,000 + ₹250 commission instantly. After that, I never looked back. Today, I complete 20 cycles daily, earning ₹5,000 every single day! My life has changed completely. I bought my first bike and my family is living a happy life. You must try this!"</p>
+        </div>
+    </div>
+</div>
+
+<div class="cta-box">
+    <h2 id="cta-t">Ready to Unlock Your Unlimited Income Potential?</h2>
+    <p id="cta-d" style="margin-bottom: 35px; color: #666; max-width: 600px; margin: 0 auto 35px;">Contact our manager on WhatsApp to start your first settlement cycle. Free 1-on-1 tutorial and Activation Bonus available for new partners today!</p>
+    <a href="https://wa.me/YOUR_NUMBER" class="whatsapp-btn" id="cta-btn">WhatsApp Us: Start Earning ➔</a>
+</div>
+
+<footer style="text-align: center; padding: 40px; color: #999; font-size: 0.85rem;">
+    © 2026 Official UPI Settlement Assistant Ltd. | Secure SSL Encryption | Privacy Guaranteed
+</footer>
+
+<div id="toast" class="toast-notif"></div>
+
+<script>
+    const data = {
+        en: {
+            lactive: "Verified Partners Online & Processing",
+            hsub: "JOIN INDIA'S LARGEST MERCHANT SETTLEMENT NETWORK", htitle: "Start UPI Settlement Today", hincome: "EARN ₹5,000+ DAILY!", hdesc: "No Deposit. No Joining Fees. Get high-volume e-commerce settlement orders and earn 2%-3% instant commission on every cycle. Safe, Legal, and Fast.",
+            s1t: "Why Become Our Merchant Partner?",
+            c1t: "💰 High Commission (2%-3%)", c1d: "We offer the highest commission rates in the industry. For every ₹10,000 you settle, you earn ₹200-₹300 instantly. The more cycles you complete, the more you earn. There is no limit to your daily earnings.",
+            c2t: "🛡️ No Deposit Mode", c2d: "We value trust. You NEVER need to pay any 'security deposits' or 'joining fees' to us. Your funds stay in your own bank account, under your full control. This is the safest way to earn.",
+            c3t: "🔓 Bypassing UPI Limits", c3d: "Normal UPI accounts have daily transaction limits. Our proprietary Merchant QR technology allows you to handle high-volume e-commerce orders, unlocking unlimited earning potential every day.",
+            c4t: "⏱️ Instant Settlement", c4d: "We use advanced real-time settlement technology. After completing a cycle, your original funds plus your commission are credited back to your account within minutes. Fast, secure, and hassle-free.",
+            s2t: "Change Your Destiny: Real Stories",
+            casen: "Rahul from Mumbai (Full-time Partner)", cased: "\"Before joining this program, I was struggling with a low salary of ₹8,000 per month, barely feeding my family. The 'No Deposit' model convinced me to try. The 1st cycle was smooth. I received ₹10,000 + ₹250 commission instantly. After that, I never looked back. Today, I complete 20 cycles daily, earning ₹5,000 every single day! My life has changed completely. I bought my first bike and my family is living a happy life. You must try this!\"",
+            ctat: "Ready to Unlock Your Unlimited Income Potential?", ctad: "Contact our manager on WhatsApp to start your first settlement cycle. Free 1-on-1 tutorial and Activation Bonus available for new partners today!",
+            ctab: "WhatsApp Us: Start Earning ➔", toast: "successfully settled ₹"
+        },
+        cn: {
+            lactive: "位经认证的伙伴正在处理中",
+            hsub: "加入印度最大的商户结算网络", htitle: "立即开启 UPI 结算之旅", hincome: "每日赚取 5000+ 卢比！", hdesc: "零押金，零加盟费。获取海量电商结算订单，每个周期赚取 **2%-3% 实时佣金**。安全、合规、快速。",
+            s1t: "为什么成为我们的商户伙伴？",
+            c1t: "💰 高佣金 (2%-3%)", c1d: "我们提供行业最高的佣金率。每结算 ₹10,000，您可以立即赚取 ₹200-₹300。完成的周期越多，赚得越多。每日收益**不设上限**。",c2t: "🛡️ 零押金模式", c2d: "我们重视信任。您**永远**不需要向我们支付任何“保证金”或“加盟费”。资金始终保留在您自己的银行账户中，完全由您掌控。这是最赚钱的方式。",
+            c3t: "🔓 绕过 UPI 限额", c3d: "普通 UPI 账户有每日交易限制。我们专有的商户二维码技术允许您处理海量电商订单，每天解锁无限的赚钱潜力。",
+            c4t: "⏱️ 实时结算", c4d: "我们采用先进的实时结算技术。完成一个周期后，您的本金和佣金将在**几分钟内**返还到您的账户。快速、安全、无忧。",
+            s2t: "改变命运：真实故事",
+            casen: "来自孟买的 Rahul（全职伙伴）", cased: "“在加入这个计划之前，我每月只挣 8,000 卢比，生活艰难，几乎无法维持生计。‘零押金’模式说服了我尝试。第一个周期非常顺利。我立即收到了 ₹10,000 + ₹250 佣金。从那以后，我再也没有回头。今天，我每天完成 20 个周期，**每天能赚 5,000 卢比！** 我的生活彻底改变了。我买了第一辆摩托车，全家过上了幸福的生活。你一定要试试！”",
+            ctat: "准备好解锁无限的收入潜力了吗？", ctad: "联系 WhatsApp 经理开始您的第一次结算周期。今天加入的新伙伴可获得免费的 1对1 指导和**激活奖金**！",
+            ctab: "联系 WhatsApp：开始赚钱 ➔", toast: "成功结算 ₹"
+        }
+    };
+
+    let currentLang = 'en';
+
+    function generateRoll() {
+        const names = ["Amit", "Ravi", "Suresh", "Priya", "Vikram", "Deepak", "Anil", "Sunil", "Raj", "Mohit", "Kiran", "Arjun", "Sonia", "Pooja", "Vijay", "Sanjay"];
+        const container = document.getElementById('roll-container');
+        for (let i = 0; i < 25; i++) {
+            const name = names[Math.floor(Math.random() * names.length)];
+            const amount = (Math.random() * 8000 + 800).toFixed(0);
+            const div = document.createElement('div');
+            div.className = 'roll-item';
+            div.innerHTML = ✅ <b>${name}***</b> ${data[currentLang].toast} <span style="color:green; font-weight:bold;">₹${amount}</span>;
+            container.appendChild(div);
+        }
+    }
+
+    function showToast() {
+        const names = ["Raj", "Mohit", "Kiran", "Arjun"];
+        const toast = document.getElementById('toast');
+        const name = names[Math.floor(Math.random() * names.length)];
+        const amount = (Math.random() * 4000 + 300).toFixed(0);
+        toast.innerText = 🎉 ${name}*** ${data[currentLang].toast}${amount};
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 3000);
+    }
+
+    function switchLang(lang) {
+        currentLang = lang;
+        document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        document.getElementById('l-active').innerText = data[lang].lactive;
+        document.getElementById('h-sub').innerText = data[lang].hsub;
+        document.getElementById('h-title').innerText = data[lang].htitle;
+        document.getElementById('h-income').innerText = data[lang].hincome;
+        document.getElementById('h-desc').innerText = data[lang].hdesc;
+        document.getElementById('s1-title').innerText = data[lang].s1t;
+        document.getElementById('c1-t').innerText = data[lang].c1t; document.getElementById('c1-d').innerText = data[lang].c1d;
+        document.getElementById('c2-t').innerText = data[lang].c2t; document.getElementById('c2-d').innerText = data[lang].c2d;
+        document.getElementById('c3-t').innerText = data[lang].c3t; document.getElementById('c3-d').innerText = data[lang].c3d;
+        document.getElementById('c4-t').innerText = data[lang].c4t; document.getElementById('c4-d').innerText = data[lang].c4d;
+        document.getElementById('s2-title').innerText = data[lang].s2t;
+        document.getElementById('case-n').innerText = data[lang].casen;
+        document.getElementById('case-d').innerText = data[lang].cased;
+        document.getElementById('cta-t').innerText = data[lang].ctat;
+        document.getElementById('cta-d').innerText = data[lang].ctad;
+        document.getElementById('cta-btn').innerText = data[lang].ctab;
+        document.getElementById('roll-container').innerHTML = '';
+        generateRoll();
+    }
+
+    generateRoll();
+    setInterval(showToast, 6000);
+    setInterval(() => {
+        const users = document.getElementById('active-users');
+        users.innerText = (parseInt(users.innerText.replace(',','')) + Math.floor(Math.random() * 3 + 1)).toLocaleString();
+    }, 5000);
+</script>
+
+</body>
+</html>
